@@ -1,8 +1,10 @@
 <template>
   <div>
-    <h1>Лабораторная работа №1</h1>
+    <h1>Лабораторная работа №1.ver2</h1>
     <input v-model="inputValue" placeholder="Введите данные" />
     <button @click="sendData">Отправить</button>
+    <button @click="fetchData">Получить данные</button>
+    <div v-if="fileData">Содержимое файла: {{ fileData }}</div>
   </div>
 </template>
 
@@ -10,7 +12,8 @@
 export default {
   data() {
     return {
-      inputValue: ''
+      inputValue: '',
+      fileData: ''
     };
   },
   methods: {
@@ -28,6 +31,16 @@ export default {
         }
       } catch (error) {
         console.error('Ошибка отправки данных', error);
+      }
+    },
+    async fetchData() {
+      try {
+        const response = await fetch('http://localhost:8000/api/data/get');
+        const result = await response.json();
+        this.fileData = result.data;
+        console.log('Данные успешно получены');
+      } catch (error) {
+        console.error('Ошибка получения данных', error);
       }
     },
   },
